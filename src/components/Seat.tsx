@@ -13,12 +13,14 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>((props, ref) => 
   const isInCart = false
   return (
     <Popover>
-      <PopoverTrigger disabled={props.disabled}>
+      <PopoverTrigger
+        disabled={props.disabled}
+        className={cn('size-8 flex justify-center items-center rounded-full bg-green-500 hover:bg-green-700 data-[state=open]:bg-yellow-400 transition-color', props.className)}
+      >
         <div
-          className={cn('size-8 rounded-full bg-zinc-100 hover:bg-zinc-200 transition-color', props.className)}
           ref={ref}
         >
-          <span className="text-zinc-400 flex justify-center items-center">{props.seat.place}</span>
+          <span className="text-white">{props.seat.place}</span>
         </div>
       </PopoverTrigger>
       <PopoverContent>

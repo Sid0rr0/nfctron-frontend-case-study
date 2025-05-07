@@ -32,6 +32,9 @@ function App() {
               seatRow: seatRow.seatRow,
               seats: seatRow.seats.map((seat) => {
                 const ticketType = data.ticketTypes.find((ticketType: TicketType) => ticketType.id === seat.ticketTypeId)
+                if (seat.place > longestRow) {
+                  longestRow = seat.place
+                }
                 return {
                   ...seat,
                   seatRow: seatRow.seatRow,
@@ -40,9 +43,7 @@ function App() {
                 }
               }).sort((a, b) => a.place - b.place),
             }
-            if (transformedSeatRow.seats.length > longestRow) {
-              longestRow = transformedSeatRow.seats.length
-            }
+
             transformedSeatRows.push(transformedSeatRow)
           })
 
@@ -76,7 +77,7 @@ function App() {
       </main>
 
       {/* bottom cart affix (wrapper) */}
-      <nav className="sticky bottom-0 left-0 right-0 bg-white border-t border-zinc-200 flex justify-center">
+      <nav className="sticky bottom-0 left-0 right-0 bg-white border-t border-zinc-200 text-zinc-900 flex justify-center">
         {/* inner content */}
         <div className="max-w-screen-lg p-6 flex justify-between items-center gap-4 grow">
           {/* total in cart state */}
