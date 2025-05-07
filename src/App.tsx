@@ -1,54 +1,78 @@
-import { Seat } from '@/components/Seat.tsx'
+import type { EventDetailType, SeatRow, TicketType, TransformedSeatRow } from './types/event'
+import EventDetail from '@/components/EventDetail'
 
 import { Button } from '@/components/ui/button.tsx'
 
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
-
 import './App.css'
 
 function App() {
   const isLoggedIn = false
+  const apiUrl = import.meta.env.VITE_API_URL
+
+  const eventDetail = useQuery({ queryKey: ['todos'], queryFn: async () => {
+    return fetch(`${apiUrl}/event`)
+      .then(res => res.json()) as Promise<EventDetailType>
+  } })
+
+  const [seats, setSeats] = useState<TransformedSeatRow[]>([])
+  const [longestRow, setLongestRow] = useState(0)
+
+  useEffect(() => {
+    if (eventDetail.data?.eventId) {
+      fetch(`${apiUrl}/event-tickets?eventId=${eventDetail.data.eventId}`)
+        .then(res => res.json())
+        .then((data) => {
+          const transformedSeatRows: TransformedSeatRow[] = []
+          let longestRow = 0
+          data.seatRows.forEach((seatRow: SeatRow) => {
+            const transformedSeatRow = {
+              seatRow: seatRow.seatRow,
+              seats: seatRow.seats.map((seat) => {
+                const ticketType = data.ticketTypes.find((ticketType: TicketType) => ticketType.id === seat.ticketTypeId)
+                return {
+                  ...seat,
+                  seatRow: seatRow.seatRow,
+                  type: ticketType.name,
+                  price: ticketType.price,
+                }
+              }).sort((a, b) => a.place - b.place),
+            }
+            if (transformedSeatRow.seats.length > longestRow) {
+              longestRow = transformedSeatRow.seats.length
+            }
+            transformedSeatRows.push(transformedSeatRow)
+          })
+
+          setLongestRow(longestRow)
+          setSeats(transformedSeatRows)
+        })
+        .catch(err => console.error(err))
+    }
+  }, [eventDetail.data?.eventId])
 
   return (
+
     <div className="flex flex-col grow">
       <Header
         isLoggedIn={isLoggedIn}
       />
 
-      {/* main body (wrapper) */}
       <main className="grow flex flex-col justify-center">
-        {/* inner content */}
-        <div className="max-w-screen-lg m-auto p-4 flex items-start grow gap-3 w-full">
-          {/* seating card */}
-          <div
-            className="bg-white rounded-md grow grid p-3 self-stretch shadow-sm"
-            style={{
-              gridTemplateColumns: 'repeat(auto-fill, minmax(40px, 1fr))',
-              gridAutoRows: '40px',
-            }}
-          >
-            {/*	seating map */}
-            {
-              Array.from({ length: 100 }, (_, i) => (
-                <Seat key={i} />
-              ))
-            }
-          </div>
+        {
+          eventDetail.isLoading
+            ? (
+                <div className="flex justify-center items-center grow">
+                  <span className="text-zinc-500">Loading...</span>
+                </div>
+              )
+            : (
+                eventDetail.data ? <EventDetail eventDetail={eventDetail.data} transformedSeatRow={seats} seatsInRow={longestRow} /> : 'Error'
+              )
+        }
 
-          {/* event info */}
-          <aside className="w-full max-w-sm bg-white rounded-md shadow-sm p-3 flex flex-col gap-2">
-            {/* event header image placeholder */}
-            <div className="bg-zinc-100 rounded-md h-32" />
-            {/* event name */}
-            <h1 className="text-xl text-zinc-900 font-semibold">[event-name]</h1>
-            {/* event description */}
-            <p className="text-sm text-zinc-500">[event-description]: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aliquid asperiores beatae deserunt dicta dolorem eius eos fuga laborum nisi officia pariatur quidem repellendus, reprehenderit sapiente, sed tenetur vel voluptatibus?</p>
-            {/* add to calendar button */}
-            <Button variant="secondary" disabled>
-              Add to calendar
-            </Button>
-          </aside>
-        </div>
       </main>
 
       {/* bottom cart affix (wrapper) */}
@@ -68,6 +92,7 @@ function App() {
         </div>
       </nav>
     </div>
+
   )
 }
 
