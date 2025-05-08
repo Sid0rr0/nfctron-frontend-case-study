@@ -3,6 +3,7 @@ import EventDetail from '@/components/EventDetail'
 
 import { Button } from '@/components/ui/button.tsx'
 
+import { useCheckout } from '@/hooks/checkoutContext'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import Header from './components/Header'
@@ -11,6 +12,7 @@ import './App.css'
 function App() {
   const isLoggedIn = false
   const apiUrl = import.meta.env.VITE_API_URL
+  const checkout = useCheckout()
 
   const eventDetail = useQuery({ queryKey: ['todos'], queryFn: async () => {
     return fetch(`${apiUrl}/event`)
@@ -81,9 +83,20 @@ function App() {
         {/* inner content */}
         <div className="max-w-screen-lg p-6 flex justify-between items-center gap-4 grow">
           {/* total in cart state */}
+          {/* checkout */}
           <div className="flex flex-col">
-            <span>Total for [?] tickets</span>
-            <span className="text-2xl font-semibold">[?] CZK</span>
+            <span>
+              Total for
+              {' '}
+              {checkout.state.count}
+              {' '}
+              tickets
+            </span>
+            <span className="text-2xl font-semibold">
+              {checkout.state.totalPrice}
+              {' '}
+              CZK
+            </span>
           </div>
 
           {/* checkout button */}

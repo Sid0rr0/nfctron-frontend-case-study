@@ -1,0 +1,60 @@
+import type { TransformedSeat } from '@/types/event'
+import { createContext, useContext, useReducer } from 'react'
+
+interface CheckoutState {
+  count: number
+  totalPrice: number
+  selectedSeats: Array<TransformedSeat>
+}
+
+interface CheckoutAction { type: CheckoutActionType, seat: TransformedSeat }
+enum CheckoutActionType {
+  ADD = 'add',
+  REMOVE = 'remove',
+}
+
+interface CheckoutContextType {
+  state: CheckoutState
+  dispatch: React.Dispatch<CheckoutAction>
+}
+
+const CheckoutContext = createContext<CheckoutContextType | undefined>(undefined)
+
+function checkoutReducer(state: CheckoutState, action: CheckoutAction) {
+  switch (action.type) {
+    case CheckoutActionType.ADD: {
+      return {
+        count: state.count + 1,
+        totalPrice: state.totalPrice + action.seat.price,
+        selectedSeats: [...state.selectedSeats, action.seat],
+      }
+    }
+    case CheckoutActionType.REMOVE: {
+      return {
+        count: state.count - 1,
+        totalPrice: state.totalPrice - action.seat.price,
+        selectedSeats: state.selectedSeats.filter(seat => seat.seatId !== action.seat.seatId),
+      }
+    }
+    default: {
+      throw new Error(`Unhandled action type: ${action.type}`)
+    }
+  }
+}
+
+function CheckoutProvider({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(checkoutReducer, { count: 0, totalPrice: 0, selectedSeats: [] })
+
+  const value = { state, dispatch }
+  return <CheckoutContext.Provider value={value}>{children}</CheckoutContext.Provider>
+}
+
+function useCheckout() {
+  const context = useContext(CheckoutContext)
+  if (context === undefined) {
+    throw new Error('useCheckout must be used within a CheckoutProvider')
+  }
+  return context
+}
+
+export { CheckoutActionType, CheckoutProvider, useCheckout }
