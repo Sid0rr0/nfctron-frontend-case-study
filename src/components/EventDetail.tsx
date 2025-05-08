@@ -18,32 +18,30 @@ export default function EventDetail({ eventDetail, transformedSeatRow, seatsInRo
       >
         {/* seating map */}
         {
-          transformedSeatRow.map((seatRow) => {
-            let j = 0
-            return (
-              <div className="flex flex-row gap-2 items-center" key={seatRow.seatRow}>
-                <span className="text-black">
-                  Row:
-                  {seatRow.seatRow}
-                </span>
+          transformedSeatRow.map(seatRow => (
+            <div className="flex flex-row gap-2 items-center" key={seatRow.seatRow}>
+              <span className="text-black">
+                Row:
+                {' '}
+                {seatRow.seatRow}
+              </span>
 
-                { Array.from({ length: seatsInRow }, (_, i) => {
-                  if (seatRow.seats[i + j]?.place === i + 1) {
-                    return <Seat key={seatRow.seats[i + j].seatId} seat={seatRow.seats[i + j]} />
-                  }
-                  else {
-                    j--
-                    return (
+              {Array.from({ length: seatsInRow }, (_, i) => {
+                // Find the seat at this position (if it exists)
+                const seatAtPosition = seatRow.seats.find(seat => seat.place === i + 1)
+
+                return seatAtPosition
+                  ? (
+                      <Seat key={seatAtPosition.seatId} seat={seatAtPosition} />
+                    )
+                  : (
                       <span key={`seat${i}`} className="size-8 flex justify-center items-center rounded-full bg-zinc-300 cursor-not-allowed">
                         {i + 1}
                       </span>
-
                     )
-                  }
-                })}
-              </div>
-            )
-          })
+              })}
+            </div>
+          ))
         }
       </div>
 
