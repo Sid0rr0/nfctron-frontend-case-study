@@ -1,12 +1,12 @@
 import type { EventDetailType, SeatRow, TicketType, TransformedSeatRow } from './types/event'
 import EventDetail from '@/components/EventDetail'
 
-import { Button } from '@/components/ui/button.tsx'
+import Header from '@/components/Header'
 
+import { Button } from '@/components/ui/button.tsx'
 import { useCheckout } from '@/hooks/checkoutContext'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import Header from './components/Header'
 import './App.css'
 
 function App() {
@@ -24,6 +24,8 @@ function App() {
 
   useEffect(() => {
     if (eventDetail.data?.eventId) {
+      const controller = new AbortController()
+
       fetch(`${apiUrl}/event-tickets?eventId=${eventDetail.data.eventId}`)
         .then(res => res.json())
         .then((data) => {
@@ -53,6 +55,10 @@ function App() {
           setSeats(transformedSeatRows)
         })
         .catch(err => console.error(err))
+
+      return () => {
+        controller.abort()
+      }
     }
   }, [eventDetail.data?.eventId])
 
