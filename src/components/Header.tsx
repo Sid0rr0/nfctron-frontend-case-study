@@ -1,6 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -9,8 +17,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx'
+import { useAuth } from '@/hooks/userContext'
+import LoginForm from './LoginForm'
 
-function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
+function Header() {
+  const auth = useAuth()
   return (
     <nav className="sticky top-0 left-0 right-0 bg-white border-b border-zinc-200 flex justify-center">
       {/* inner content */}
@@ -24,7 +35,7 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
         {/* user menu */}
         <div className="max-w-[250px] w-full flex justify-end">
           {
-            isLoggedIn
+            auth.authState.isLoggedIn
               ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -37,17 +48,21 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
                           </Avatar>
 
                           <div className="flex flex-col text-left">
-                            <span className="text-sm font-medium">John Doe</span>
-                            <span className="text-xs text-zinc-500">john.doe@nfctron.com</span>
+                            <span className="text-sm text-zinc-700 font-medium">{auth.authState.user?.firstName}</span>
+                            <span className="text-xs text-zinc-500">{auth.authState.user?.email}</span>
                           </div>
                         </div>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-[250px]">
-                      <DropdownMenuLabel>John Doe</DropdownMenuLabel>
+                      <DropdownMenuLabel>
+                        {auth.authState.user?.firstName}
+                        {' '}
+                        {auth.authState.user?.lastName}
+                      </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuItem disabled>
+                        <DropdownMenuItem onClick={() => auth.logout()}>
                           Logout
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
@@ -55,9 +70,15 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
                   </DropdownMenu>
                 )
               : (
-                  <Button disabled variant="secondary">
-                    Login or register
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger className="text-zinc-900">Login</DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle className="text-zinc-900">Login</DialogTitle>
+                        <LoginForm />
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 )
           }
         </div>

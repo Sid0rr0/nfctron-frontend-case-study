@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const isLoggedIn = false
   const apiUrl = import.meta.env.VITE_API_URL
   const checkout = useCheckout()
 
@@ -65,9 +64,7 @@ function App() {
   return (
 
     <div className="flex flex-col grow">
-      <Header
-        isLoggedIn={isLoggedIn}
-      />
+      <Header />
 
       <main className="grow flex flex-col justify-center">
         {
