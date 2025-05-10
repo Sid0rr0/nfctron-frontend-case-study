@@ -2,15 +2,17 @@ import type { TransformedSeat } from '@/types/event'
 import { createContext, useContext, useReducer } from 'react'
 
 interface CheckoutState {
+  eventId: string
   count: number
   totalPrice: number
   selectedSeats: Array<TransformedSeat>
 }
 
-interface CheckoutAction { type: CheckoutActionType, seat: TransformedSeat }
+interface CheckoutAction { type: CheckoutActionType, seat: TransformedSeat, eventId?: string }
 enum CheckoutActionType {
   ADD = 'add',
   REMOVE = 'remove',
+  SET_EVENT_ID = 'set_event_id',
 }
 
 interface CheckoutContextType {
@@ -24,6 +26,7 @@ function checkoutReducer(state: CheckoutState, action: CheckoutAction) {
   switch (action.type) {
     case CheckoutActionType.ADD: {
       return {
+        eventId: state.eventId,
         count: state.count + 1,
         totalPrice: state.totalPrice + action.seat.price,
         selectedSeats: [...state.selectedSeats, action.seat],
@@ -31,9 +34,16 @@ function checkoutReducer(state: CheckoutState, action: CheckoutAction) {
     }
     case CheckoutActionType.REMOVE: {
       return {
+        eventId: state.eventId,
         count: state.count - 1,
         totalPrice: state.totalPrice - action.seat.price,
         selectedSeats: state.selectedSeats.filter(seat => seat.seatId !== action.seat.seatId),
+      }
+    }
+    case CheckoutActionType.SET_EVENT_ID: {
+      return {
+        ...state,
+        eventId: action.eventId ? action.eventId : state.eventId,
       }
     }
     default: {
@@ -43,7 +53,7 @@ function checkoutReducer(state: CheckoutState, action: CheckoutAction) {
 }
 
 function CheckoutProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(checkoutReducer, { count: 0, totalPrice: 0, selectedSeats: [] })
+  const [state, dispatch] = useReducer(checkoutReducer, { eventId: '', count: 0, totalPrice: 0, selectedSeats: [] })
 
   const value = { state, dispatch }
   return <CheckoutContext.Provider value={value}>{children}</CheckoutContext.Provider>

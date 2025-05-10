@@ -1,43 +1,30 @@
 import FieldInfo from '@/components/FieldInfo'
-import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/userContext'
 import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
+import { Button } from './ui/button'
 
-export default function LoginForm() {
-  const [responseMesasge, setResponseMesasge] = useState('')
-  const auth = useAuth()
+interface CheckoutProps {
+  data: {
+    email?: string
+    firstName?: string
+    lastName?: string
+  }
+  onSubmit: (data: {
+    email: string
+    firstName: string
+    lastName: string
+  }) => void
+}
 
+export default function CheckoutForm(props: CheckoutProps) {
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: props.data.email || '',
+      firstName: props.data.firstName || '',
+      lastName: props.data.lastName || '',
+
     },
     onSubmit: async ({ value }) => {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(value),
-        })
-
-        const data = await response.json()
-        setResponseMesasge(data.message)
-
-        if (response.ok) {
-          auth.login({
-            email: data.user.email,
-            firstName: data.user.firstName,
-            lastName: data.user.lastName,
-          })
-        }
-      }
-      catch (error) {
-        console.error('Login error:', error)
-        setResponseMesasge('An error occurred during login. Please try again.')
-      }
+      props.onSubmit(value)
     },
   })
 
@@ -91,14 +78,35 @@ export default function LoginForm() {
         </div>
         <div>
           <form.Field
-            name="password"
+            name="firstName"
             children={field => (
               <div className="flex flex-col gap-1">
-                <label htmlFor={field.name}>Password:</label>
+                <label htmlFor={field.name}>First Name:</label>
                 <input
                   className="bg-zinc-200"
-                  type="password"
-                  autoComplete="password"
+                  type="firstName"
+                  autoComplete="firstName"
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={e => field.handleChange(e.target.value)}
+                />
+                <FieldInfo field={field} />
+              </div>
+            )}
+          />
+        </div>
+        <div>
+          <form.Field
+            name="lastName"
+            children={field => (
+              <div className="flex flex-col gap-1">
+                <label htmlFor={field.name}>Last Name:</label>
+                <input
+                  className="bg-zinc-200"
+                  type="lastName"
+                  autoComplete="lastName"
                   id={field.name}
                   name={field.name}
                   value={field.state.value}
@@ -114,15 +122,12 @@ export default function LoginForm() {
           selector={state => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? '...' : 'Submit'}
+              {isSubmitting ? '...' : 'Purchase'}
             </Button>
           )}
         />
       </form>
 
-      <div>
-        {responseMesasge}
-      </div>
     </div>
   )
 }

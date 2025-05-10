@@ -3,10 +3,10 @@ import EventDetail from '@/components/EventDetail'
 
 import Header from '@/components/Header'
 
-import { Button } from '@/components/ui/button.tsx'
-import { useCheckout } from '@/hooks/checkoutContext'
+import { CheckoutActionType, useCheckout } from '@/hooks/checkoutContext'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import Checkout from './components/Checkout'
 import './App.css'
 
 function App() {
@@ -55,6 +55,19 @@ function App() {
         })
         .catch(err => console.error(err))
 
+      checkout.dispatch({
+        type: CheckoutActionType.SET_EVENT_ID,
+        seat: {
+          seatId: '',
+          place: 0,
+          ticketTypeId: '',
+          seatRow: 0,
+          type: '',
+          price: 0,
+        },
+        eventId: eventDetail.data.eventId,
+      })
+
       return () => {
         controller.abort()
       }
@@ -75,7 +88,9 @@ function App() {
                 </div>
               )
             : (
-                eventDetail.data ? <EventDetail eventDetail={eventDetail.data} transformedSeatRow={seats} seatsInRow={longestRow} /> : 'Error'
+                eventDetail.data
+                  ? <EventDetail eventDetail={eventDetail.data} transformedSeatRow={seats} seatsInRow={longestRow} />
+                  : <div className="text-center">Error</div>
               )
         }
 
@@ -103,9 +118,7 @@ function App() {
           </div>
 
           {/* checkout button */}
-          <Button disabled variant="default">
-            Checkout now
-          </Button>
+          <Checkout />
         </div>
       </nav>
     </div>
