@@ -35,6 +35,12 @@ i18n
           addToCart: 'Add to cart',
           removeFromCart: 'Remove from cart',
           addToCalendar: 'Add to calendar',
+          error: {
+            emailLength: 'Email must be at least 3 characters long',
+            login: 'An error occurred during login. Please try again.',
+          },
+          checkoutSuccess: 'Checkout successful!',
+          checkoutError: 'Checkout failed. Please try again.',
         },
       },
       cs: {
@@ -60,6 +66,12 @@ i18n
           addToCart: 'Přidat do košíku',
           removeFromCart: 'Odebrat z košíku',
           addToCalendar: 'Přidat do kalendáře',
+          error: {
+            emailLength: 'E-mail musí mít alespoň 3 znaky',
+            login: 'Došlo k chybě při přihlašování. Zkuste to prosím znovu.',
+          },
+          checkoutSuccess: 'Úspěšně zakoupeno!',
+          checkoutError: 'Nákup se nezdařil. Zkuste to prosím znovu.',
         },
       },
     },

@@ -38,7 +38,7 @@ export default function LoginForm() {
       }
       catch (error) {
         console.error('Login error:', error)
-        setResponseMesasge('An error occurred during login. Please try again.')
+        setResponseMesasge(t('error.login'))
       }
     },
   })
@@ -61,11 +61,10 @@ export default function LoginForm() {
                 !value
                   ? 'An email is required'
                   : value.length < 3
-                    ? 'email must be at least 3 characters'
+                    ? t('error.emailLength')
                     : undefined,
               onChangeAsyncDebounceMs: 500,
               onChangeAsync: async ({ value }) => {
-                await new Promise(resolve => setTimeout(resolve, 1000))
                 return (
                   value.includes('error') && 'No "error" allowed in email'
                 )
@@ -81,7 +80,8 @@ export default function LoginForm() {
                   <input
                     className="bg-zinc-200"
                     id={field.name}
-                    type="text"
+                    type="email"
+                    required
                     autoComplete="email"
                     name={field.name}
                     value={field.state.value}
@@ -107,6 +107,7 @@ export default function LoginForm() {
                   className="bg-zinc-200"
                   type="password"
                   autoComplete="password"
+                  required
                   id={field.name}
                   name={field.name}
                   value={field.state.value}

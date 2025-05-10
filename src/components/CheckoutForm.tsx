@@ -50,11 +50,10 @@ export default function CheckoutForm(props: CheckoutProps) {
                 !value
                   ? 'An email is required'
                   : value.length < 3
-                    ? 'email must be at least 3 characters'
+                    ? t('error.emailLength')
                     : undefined,
               onChangeAsyncDebounceMs: 500,
               onChangeAsync: async ({ value }) => {
-                await new Promise(resolve => setTimeout(resolve, 1000))
                 return (
                   value.includes('error') && 'No "error" allowed in email'
                 )
@@ -70,7 +69,8 @@ export default function CheckoutForm(props: CheckoutProps) {
                   <input
                     className="bg-zinc-200"
                     id={field.name}
-                    type="text"
+                    type="email"
+                    required
                     autoComplete="email"
                     name={field.name}
                     value={field.state.value}
@@ -95,6 +95,7 @@ export default function CheckoutForm(props: CheckoutProps) {
                 <input
                   className="bg-zinc-200"
                   type="firstName"
+                  required
                   autoComplete="firstName"
                   id={field.name}
                   name={field.name}

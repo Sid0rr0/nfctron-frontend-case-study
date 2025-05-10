@@ -47,16 +47,16 @@ export default function Checkout() {
       })
       const responseData = await response.json()
       if (response.ok) {
-        setStatus({ submited: true, message: 'Checkout successful!' })
+        setStatus({ submited: true, message: t('checkoutSuccess') })
       }
       else {
         console.error('Checkout error:', responseData)
-        setStatus({ submited: false, message: 'Checkout failed. Please try again.' })
+        setStatus({ submited: false, message: t('checkoutError') })
       }
     }
     catch (error) {
       console.error('Checkout error:', error)
-      setStatus({ submited: false, message: 'Checkout failed. Please try again.' })
+      setStatus({ submited: false, message: t('checkoutError') })
     }
   }
 
