@@ -33,16 +33,20 @@ function App() {
     <div className="flex flex-col grow">
       <Header />
 
-      <main className="grow flex flex-col justify-center">
+      <main className="grow flex flex-col items-center justify-center">
         {
-          eventDetail.isLoading
+          eventDetail.isSuccess
             ? (
-                <Skeleton className="h-1/2 w-1/2 rounded-xl" />
-              )
-            : (
                 eventDetail.data
                   ? <EventDetail eventDetail={eventDetail.data} />
                   : <div className="text-center">Error</div>
+              )
+            : (
+                <div className="flex flex-col items-start justify-center gap-2">
+                  <Skeleton className="h-1/2 min-h-32 w-1/2 min-w-64 rounded-xl" />
+                  <Skeleton className="h-4 w-1/2 min-w-64" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
               )
         }
 

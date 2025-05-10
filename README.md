@@ -26,20 +26,20 @@ Odesláním objednávky je pak uživatel informován o jejím vytvoření či p�
 
 Aplikace by měla být schopna:
 
--   [ ] Zobrazit onepage detail akce s relevantními údaji z API (obrázek, název, popis, datum, ...)
--   [ ] Zobrazit mapu dostupných sedadel (řada, sedadlo) z API.
+-   [x] Zobrazit onepage detail akce s relevantními údaji z API (obrázek, název, popis, datum, ...)
+-   [x] Zobrazit mapu dostupných sedadel (řada, sedadlo) z API.
     -   zde není třeba mapu vykreslovat optimalizovaně, např. pomocí Canvas API/SVG, postačí jako HTML prvky
     -   pozor na pořadí sedadel (ne vždy přijdou všechna sedadla po sobě 👀)
--   [ ] Po kliku na sedadlo umožnit jeho přidání do košíku (případně odebrání, pokud je již v košíku).
--   [ ] Spravovat obsah košíku s využitím promyšleného state managementu.
--   [ ] Zobrazit aktuální počet vstupenek v košíku a jejich celkovou hodnotu (ve správné měně a formátu).
--   [ ] Po kliknutí na "Koupit vstupenky" umožnit přihlášení nebo vyplnění potřebných údajů jako "host".
--   [ ] Vytvořit objednávku skrze API a zobrazit výsledek (úspěch nebo chybu).
+-   [x] Po kliku na sedadlo umožnit jeho přidání do košíku (případně odebrání, pokud je již v košíku).
+-   [x] Spravovat obsah košíku s využitím promyšleného state managementu.
+-   [x] Zobrazit aktuální počet vstupenek v košíku a jejich celkovou hodnotu (ve správné měně a formátu).
+-   [x] Po kliknutí na "Koupit vstupenky" umožnit přihlášení nebo vyplnění potřebných údajů jako "host".
+-   [x] Vytvořit objednávku skrze API a zobrazit výsledek (úspěch nebo chybu).
 
 ## 🌟 Bonusové Funkce
 
--   [ ] Umožnit přidání akce do kalendáře.
--   [ ] Multijazyčnost aplikace.
+-   [x] Umožnit přidání akce do kalendáře.
+-   [x] Multijazyčnost aplikace.
 
 _A dalším vychytávkám se meze nekladou! Ukažte, co umíte! 💫_
 

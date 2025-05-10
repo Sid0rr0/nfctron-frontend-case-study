@@ -21,7 +21,7 @@ export default function EventDetail({ eventDetail }: EventDetailProps) {
   })
 
   const [longestRow, setLongestRow] = useState(0)
-
+  // gathers all necessary data to be displayed in the Seat component, sorts the seats & finds the row length
   const transformedSeatRow = useMemo(() => {
     if (eventSeats.status === 'success') {
       const transformedSeatRows: TransformedSeatRow[] = []
@@ -64,7 +64,7 @@ export default function EventDetail({ eventDetail }: EventDetailProps) {
       >
         {/* seating map */}
         {eventSeats.isLoading
-          ? <Skeleton className="h-1/2 w-1/2 rounded-xl" />
+          ? <Skeleton className="h-1/4 w-8/12 rounded-xl" />
           : (
               <>
                 {transformedSeatRow.map(seatRow => (
@@ -82,6 +82,7 @@ export default function EventDetail({ eventDetail }: EventDetailProps) {
                             <Seat key={seatAtPosition.seatId} seat={seatAtPosition} />
                           )
                         : (
+                            // unavailable seat
                             <span key={`seat${i}`} className="size-8 flex justify-center items-center rounded-full bg-zinc-300 cursor-not-allowed">
                               {i + 1}
                             </span>
