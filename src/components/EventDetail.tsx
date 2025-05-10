@@ -1,6 +1,6 @@
 import type { EventDetailType, TransformedSeatRow } from '@/types/event.ts'
 import { Seat } from '@/components/Seat.tsx'
-import { Button } from '@/components/ui/button.tsx'
+import { AddToCalendarButton } from 'add-to-calendar-button-react'
 
 interface EventDetailProps {
   eventDetail: EventDetailType
@@ -57,9 +57,17 @@ export default function EventDetail({ eventDetail, transformedSeatRow, seatsInRo
         {/* event description */}
         <p className="text-sm text-zinc-500">{eventDetail.description}</p>
         {/* add to calendar button */}
-        <Button variant="secondary" disabled>
-          Add to calendar
-        </Button>
+        <div className="mx-auto">
+          <AddToCalendarButton
+
+            name={eventDetail.namePub}
+            options="'Apple','Google'"
+            startDate={eventDetail.dateFrom}
+            endDate={eventDetail.dateTo}
+            timeZone="Europe/Prague"
+          />
+        </div>
+
       </aside>
     </div>
 
