@@ -8,12 +8,16 @@ interface CheckoutState {
   selectedSeats: Array<TransformedSeat>
 }
 
-interface CheckoutAction { type: CheckoutActionType, seat: TransformedSeat, eventId?: string }
 enum CheckoutActionType {
   ADD = 'add',
   REMOVE = 'remove',
   SET_EVENT_ID = 'set_event_id',
 }
+
+type CheckoutAction =
+  | { type: CheckoutActionType.ADD, seat: TransformedSeat }
+  | { type: CheckoutActionType.REMOVE, seat: TransformedSeat }
+  | { type: CheckoutActionType.SET_EVENT_ID, eventId: string }
 
 interface CheckoutContextType {
   state: CheckoutState
@@ -47,7 +51,7 @@ function checkoutReducer(state: CheckoutState, action: CheckoutAction) {
       }
     }
     default: {
-      throw new Error(`Unhandled action type: ${action.type}`)
+      throw new Error(`Unhandled action type`)
     }
   }
 }

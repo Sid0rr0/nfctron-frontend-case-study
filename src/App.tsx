@@ -23,14 +23,6 @@ function App() {
     if (eventDetail.data?.eventId) {
       checkout.dispatch({
         type: CheckoutActionType.SET_EVENT_ID,
-        seat: {
-          seatId: '',
-          place: 0,
-          ticketTypeId: '',
-          seatRow: 0,
-          type: '',
-          price: 0,
-        },
         eventId: eventDetail.data.eventId,
       })
     }
