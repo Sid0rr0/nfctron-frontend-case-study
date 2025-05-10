@@ -1,11 +1,12 @@
-import type { EventDetailType, SeatRow, TicketType, TransformedSeatRow } from './types/event'
+import type { EventDetailType } from './types/event'
 import EventDetail from '@/components/EventDetail'
 import Header from '@/components/Header'
 import { CheckoutActionType, useCheckout } from '@/hooks/checkoutContext'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Checkout from './components/Checkout'
+import { Skeleton } from './components/ui/skeleton'
 import './App.css'
 
 function App() {
@@ -13,48 +14,13 @@ function App() {
   const checkout = useCheckout()
   const { t } = useTranslation()
 
-  const eventDetail = useQuery({ queryKey: ['todos'], queryFn: async () => {
+  const eventDetail = useQuery({ queryKey: ['eventDetail'], queryFn: async () => {
     return fetch(`${apiUrl}/event`)
       .then(res => res.json()) as Promise<EventDetailType>
   } })
 
-  const [seats, setSeats] = useState<TransformedSeatRow[]>([])
-  const [longestRow, setLongestRow] = useState(0)
-
   useEffect(() => {
     if (eventDetail.data?.eventId) {
-      const controller = new AbortController()
-
-      fetch(`${apiUrl}/event-tickets?eventId=${eventDetail.data.eventId}`)
-        .then(res => res.json())
-        .then((data) => {
-          const transformedSeatRows: TransformedSeatRow[] = []
-          let longestRow = 0
-          data.seatRows.forEach((seatRow: SeatRow) => {
-            const transformedSeatRow = {
-              seatRow: seatRow.seatRow,
-              seats: seatRow.seats.map((seat) => {
-                const ticketType = data.ticketTypes.find((ticketType: TicketType) => ticketType.id === seat.ticketTypeId)
-                if (seat.place > longestRow) {
-                  longestRow = seat.place
-                }
-                return {
-                  ...seat,
-                  seatRow: seatRow.seatRow,
-                  type: ticketType.name,
-                  price: ticketType.price,
-                }
-              }).sort((a, b) => a.place - b.place),
-            }
-
-            transformedSeatRows.push(transformedSeatRow)
-          })
-
-          setLongestRow(longestRow)
-          setSeats(transformedSeatRows)
-        })
-        .catch(err => console.error(err))
-
       checkout.dispatch({
         type: CheckoutActionType.SET_EVENT_ID,
         seat: {
@@ -67,10 +33,6 @@ function App() {
         },
         eventId: eventDetail.data.eventId,
       })
-
-      return () => {
-        controller.abort()
-      }
     }
   }, [eventDetail.data?.eventId])
 
@@ -83,13 +45,11 @@ function App() {
         {
           eventDetail.isLoading
             ? (
-                <div className="flex justify-center items-center grow">
-                  <span className="text-zinc-500">Loading...</span>
-                </div>
+                <Skeleton className="h-1/2 w-1/2 rounded-xl" />
               )
             : (
                 eventDetail.data
-                  ? <EventDetail eventDetail={eventDetail.data} transformedSeatRow={seats} seatsInRow={longestRow} />
+                  ? <EventDetail eventDetail={eventDetail.data} />
                   : <div className="text-center">Error</div>
               )
         }
