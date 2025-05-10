@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/userContext'
 import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function LoginForm() {
   const [responseMesasge, setResponseMesasge] = useState('')
   const auth = useAuth()
+  const { t } = useTranslation()
 
   const form = useForm({
     defaultValues: {
@@ -72,7 +74,10 @@ export default function LoginForm() {
             children={(field) => {
               return (
                 <div className="flex flex-col gap-1">
-                  <label htmlFor={field.name}>Email:</label>
+                  <label htmlFor={field.name}>
+                    {t('email')}
+                    :
+                  </label>
                   <input
                     className="bg-zinc-200"
                     id={field.name}
@@ -94,7 +99,10 @@ export default function LoginForm() {
             name="password"
             children={field => (
               <div className="flex flex-col gap-1">
-                <label htmlFor={field.name}>Password:</label>
+                <label htmlFor={field.name}>
+                  {t('password')}
+                  :
+                </label>
                 <input
                   className="bg-zinc-200"
                   type="password"
@@ -114,7 +122,7 @@ export default function LoginForm() {
           selector={state => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
             <Button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? '...' : 'Submit'}
+              {isSubmitting ? '...' : t('login')}
             </Button>
           )}
         />

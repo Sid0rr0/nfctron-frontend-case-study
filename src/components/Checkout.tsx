@@ -9,6 +9,7 @@ import { CheckoutActionType, useCheckout } from '@/hooks/checkoutContext'
 import { useAuth } from '@/hooks/userContext'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import CheckoutForm from './CheckoutForm'
 import LoginForm from './LoginForm'
 import { Button } from './ui/button'
@@ -16,6 +17,7 @@ import { Button } from './ui/button'
 export default function Checkout() {
   const checkout = useCheckout()
   const auth = useAuth()
+  const { t } = useTranslation()
   const [status, setStatus] = useState({
     submited: false,
     message: '',
@@ -80,6 +82,7 @@ export default function Checkout() {
             <div>
               <Button
                 disabled={status.submited}
+                aria-label={t('removeFromCart')}
                 onClick={() => checkout.dispatch({ type: CheckoutActionType.REMOVE, seat })}
               >
                 <Trash2 />
@@ -95,21 +98,19 @@ export default function Checkout() {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="default" disabled={checkout.state.count <= 0}>
-          Checkout now
+          {t('checkoutNow')}
         </Button>
       </DialogTrigger>
       <DialogContent className="overflow-auto max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle className="text-zinc-900 flex justify-center mb-4">Checkout</DialogTitle>
-          {checkout.state.count > 0 ? <SeatList /> : <span className="text-zinc-500">No tickets selected</span>}
+          <DialogTitle className="text-zinc-900 flex justify-center mb-4">{t('checkout')}</DialogTitle>
+          {checkout.state.count > 0 ? <SeatList /> : <span className="text-zinc-500">{t('noTickets')}</span>}
 
           <div className="flex justify-between items-center text-zinc-900 pt-8">
             <span>
-              Total for
+              {t('totalTickets')}
               {' '}
               {checkout.state.count}
-              {' '}
-              tickets
             </span>
             <span className="text-2xl font-semibold">
               {checkout.state.totalPrice}
@@ -130,7 +131,7 @@ export default function Checkout() {
             {!status.submited
               && (
                 <>
-                  <h3 className="text-lg mt-8">Fill out the info</h3>
+                  <h3 className="text-lg mt-8">{t('fillOutTheInfo')}</h3>
                   <CheckoutForm
                     data={{
                       email: auth.authState.user?.email,

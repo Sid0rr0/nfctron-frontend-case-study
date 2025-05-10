@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CheckoutActionType, useCheckout } from '@/hooks/checkoutContext'
 import { cn } from '@/lib/utils.ts'
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface SeatProps extends React.HTMLAttributes<HTMLElement> {
   seat: TransformedSeat
@@ -12,6 +13,7 @@ interface SeatProps extends React.HTMLAttributes<HTMLElement> {
 
 export const Seat = React.forwardRef<HTMLDivElement, SeatProps>((props, ref) => {
   const checkout = useCheckout()
+  const { t } = useTranslation()
   const isInCart = useMemo(() => {
     return checkout.state.selectedSeats.some(seat => seat.seatId === props.seat.seatId)
   }, [checkout.state.selectedSeats, props.seat.seatId])
@@ -29,29 +31,42 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>((props, ref) => 
         </div>
       </PopoverTrigger>
       <PopoverContent>
-        <div className="flex flex-col gap-2">
-          <span>
-            Seat row:
-            {' '}
-            {props.seat.seatRow}
-          </span>
-          <span>
-            Seat number:
-            {' '}
-            {props.seat.place}
-          </span>
-          <span>
-            Ticket type:
-            {' '}
-            {props.seat.type}
-          </span>
-          <span>
-            Price:
-            {' '}
-            {props.seat.price}
-            {' '}
-            CZK
-          </span>
+        <div className="flex flex-col gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-gray-600">
+              {t('seatRow')}
+              :
+            </span>
+            <span className="font-semibold">{props.seat.seatRow}</span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-gray-600">
+              {t('seatNumber')}
+              :
+            </span>
+            <span className="font-semibold">{props.seat.place}</span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-gray-600">
+              {t('ticketType')}
+              :
+            </span>
+            <span className="font-semibold">{props.seat.type}</span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-gray-600">
+              {t('price')}
+              :
+            </span>
+            <span className="font-semibold">
+              {props.seat.price}
+              {' '}
+              {t('currency')}
+            </span>
+          </div>
         </div>
 
         {/* checkout */}
@@ -60,12 +75,12 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>((props, ref) => 
             isInCart
               ? (
                   <Button onClick={() => checkout.dispatch({ type: CheckoutActionType.REMOVE, seat: props.seat })} variant="destructive" size="sm">
-                    Remove from cart
+                    {t('removeFromCart')}
                   </Button>
                 )
               : (
                   <Button onClick={() => checkout.dispatch({ type: CheckoutActionType.ADD, seat: props.seat })} variant="default" size="sm">
-                    Add to cart
+                    {t('addToCart')}
                   </Button>
                 )
           }

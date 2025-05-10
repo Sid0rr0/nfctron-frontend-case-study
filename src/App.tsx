@@ -1,17 +1,17 @@
 import type { EventDetailType, SeatRow, TicketType, TransformedSeatRow } from './types/event'
 import EventDetail from '@/components/EventDetail'
-
 import Header from '@/components/Header'
-
 import { CheckoutActionType, useCheckout } from '@/hooks/checkoutContext'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Checkout from './components/Checkout'
 import './App.css'
 
 function App() {
   const apiUrl = import.meta.env.VITE_API_URL
   const checkout = useCheckout()
+  const { t } = useTranslation()
 
   const eventDetail = useQuery({ queryKey: ['todos'], queryFn: async () => {
     return fetch(`${apiUrl}/event`)
@@ -104,11 +104,9 @@ function App() {
           {/* checkout */}
           <div className="flex flex-col">
             <span>
-              Total for
+              {t('totalTickets')}
               {' '}
               {checkout.state.count}
-              {' '}
-              tickets
             </span>
             <span className="text-2xl font-semibold">
               {checkout.state.totalPrice}

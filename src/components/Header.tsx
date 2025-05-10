@@ -18,10 +18,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx'
 import { useAuth } from '@/hooks/userContext'
+import { t } from 'i18next'
+import { Globe } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import LoginForm from './LoginForm'
+
+const lngs = {
+  en: { nativeName: 'English' },
+  cs: { nativeName: 'Česky' },
+}
 
 function Header() {
   const auth = useAuth()
+  const { i18n } = useTranslation()
+
   return (
     <nav className="sticky top-0 left-0 right-0 bg-white border-b border-zinc-200 flex justify-center">
       {/* inner content */}
@@ -32,6 +42,34 @@ function Header() {
         </div>
         {/* app/author title/name placeholder */}
         <div className="bg-zinc-100 rounded-md h-8 w-[200px]" />
+
+        <div className="text-zinc-900 font-medium flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center gap-2">
+                <Globe size={18} />
+                <span className="text-sm font-medium">
+                  {lngs[i18n.resolvedLanguage as keyof typeof lngs]?.nativeName || 'Language'}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[150px]">
+              <DropdownMenuLabel>Select Language</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                {Object.keys(lngs).map(lng => (
+                  <DropdownMenuItem
+                    key={lng}
+                    className={i18n.resolvedLanguage === lng ? 'font-bold' : ''}
+                    onClick={() => i18n.changeLanguage(lng)}
+                  >
+                    {lngs[lng as keyof typeof lngs].nativeName}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         {/* user menu */}
         <div className="max-w-[250px] w-full flex justify-end">
           {
@@ -63,7 +101,7 @@ function Header() {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem onClick={() => auth.logout()}>
-                          Logout
+                          {t('logout')}
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
@@ -71,10 +109,14 @@ function Header() {
                 )
               : (
                   <Dialog>
-                    <DialogTrigger className="text-zinc-900">Login</DialogTrigger>
+                    <DialogTrigger className="text-zinc-900">
+                      <Button>
+                        <span className="text-sm font-medium">{t('login')}</span>
+                      </Button>
+                    </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle className="text-zinc-900">Login</DialogTitle>
+                        <DialogTitle className="text-zinc-900">{t('login')}</DialogTitle>
                         <LoginForm />
                       </DialogHeader>
                     </DialogContent>

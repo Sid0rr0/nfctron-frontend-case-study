@@ -9,6 +9,7 @@ import App from './App.tsx'
 import { CheckoutProvider } from './hooks/checkoutContext.tsx'
 import { AuthProvider } from './hooks/userContext.tsx'
 import './index.css'
+import '@/i18n/i18n.ts'
 
 const queryClient = new QueryClient()
 

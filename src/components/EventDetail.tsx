@@ -1,6 +1,7 @@
 import type { EventDetailType, TransformedSeatRow } from '@/types/event.ts'
 import { Seat } from '@/components/Seat.tsx'
 import { AddToCalendarButton } from 'add-to-calendar-button-react'
+import { t } from 'i18next'
 
 interface EventDetailProps {
   eventDetail: EventDetailType
@@ -20,9 +21,7 @@ export default function EventDetail({ eventDetail, transformedSeatRow, seatsInRo
         {
           transformedSeatRow.map(seatRow => (
             <div className="flex flex-row gap-2 items-center" key={seatRow.seatRow}>
-              <span className="text-black">
-                Row:
-                {' '}
+              <span className="text-black pr-2 text-center w-6">
                 {seatRow.seatRow}
               </span>
 
@@ -59,7 +58,7 @@ export default function EventDetail({ eventDetail, transformedSeatRow, seatsInRo
         {/* add to calendar button */}
         <div className="mx-auto">
           <AddToCalendarButton
-
+            label={t('addToCalendar')}
             name={eventDetail.namePub}
             options="'Apple','Google'"
             startDate={eventDetail.dateFrom}

@@ -1,5 +1,7 @@
 import FieldInfo from '@/components/FieldInfo'
+import { useCheckout } from '@/hooks/checkoutContext'
 import { useForm } from '@tanstack/react-form'
+import { useTranslation } from 'react-i18next'
 import { Button } from './ui/button'
 
 interface CheckoutProps {
@@ -16,6 +18,8 @@ interface CheckoutProps {
 }
 
 export default function CheckoutForm(props: CheckoutProps) {
+  const { t } = useTranslation()
+  const checkout = useCheckout()
   const form = useForm({
     defaultValues: {
       email: props.data.email || '',
@@ -59,7 +63,10 @@ export default function CheckoutForm(props: CheckoutProps) {
             children={(field) => {
               return (
                 <div className="flex flex-col gap-1">
-                  <label htmlFor={field.name}>Email:</label>
+                  <label htmlFor={field.name}>
+                    {t('email')}
+                    :
+                  </label>
                   <input
                     className="bg-zinc-200"
                     id={field.name}
@@ -81,7 +88,10 @@ export default function CheckoutForm(props: CheckoutProps) {
             name="firstName"
             children={field => (
               <div className="flex flex-col gap-1">
-                <label htmlFor={field.name}>First Name:</label>
+                <label htmlFor={field.name}>
+                  {t('firstName')}
+                  :
+                </label>
                 <input
                   className="bg-zinc-200"
                   type="firstName"
@@ -102,7 +112,10 @@ export default function CheckoutForm(props: CheckoutProps) {
             name="lastName"
             children={field => (
               <div className="flex flex-col gap-1">
-                <label htmlFor={field.name}>Last Name:</label>
+                <label htmlFor={field.name}>
+                  {t('lastName')}
+                  :
+                </label>
                 <input
                   className="bg-zinc-200"
                   type="lastName"
@@ -121,8 +134,8 @@ export default function CheckoutForm(props: CheckoutProps) {
         <form.Subscribe
           selector={state => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? '...' : 'Purchase'}
+            <Button type="submit" disabled={!canSubmit || checkout.state.count <= 0}>
+              {isSubmitting ? '...' : t('send')}
             </Button>
           )}
         />
