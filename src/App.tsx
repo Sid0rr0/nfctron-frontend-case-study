@@ -97,12 +97,12 @@ function App() {
       </main>
 
       {/* bottom cart affix (wrapper) */}
-      <nav className="sticky bottom-0 left-0 right-0 bg-white border-t border-zinc-200 text-zinc-900 flex justify-center">
+      <nav className="sticky bottom-0 left-0 right-0 bg-white border-t border-zinc-200 text-zinc-900 flex justify-center z-20">
         {/* inner content */}
-        <div className="max-w-screen-lg p-6 flex justify-between items-center gap-4 grow">
+        <div className="max-w-screen-lg p-6 flex flex-col md:flex-row justify-between items-center gap-4 grow">
           {/* total in cart state */}
           {/* checkout */}
-          <div className="flex flex-col">
+          <div className="flex items-center justify-between gap-8 md:gap-1 md:flex-col">
             <span>
               {t('totalTickets')}
               {' '}
@@ -111,7 +111,7 @@ function App() {
             <span className="text-2xl font-semibold">
               {checkout.state.totalPrice}
               {' '}
-              CZK
+              {t('currency')}
             </span>
           </div>
 

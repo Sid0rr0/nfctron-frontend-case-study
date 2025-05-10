@@ -12,10 +12,10 @@ interface EventDetailProps {
 export default function EventDetail({ eventDetail, transformedSeatRow, seatsInRow }: EventDetailProps) {
   return (
 
-    <div className="max-w-screen-lg m-auto p-4 flex items-start grow gap-3 w-full">
+    <div className="max-w-screen-lg m-auto p-4 flex items-start grow gap-3 w-full flex-col md:flex-row">
       {/* seating card */}
       <div
-        className="bg-white rounded-md grow p-3 self-stretch shadow-sm flex flex-col gap-2"
+        className="bg-white rounded-md grow p-3 self-stretch shadow-sm flex flex-col gap-2 items-start xl:items-center overflow-auto"
       >
         {/* seating map */}
         {
@@ -45,11 +45,11 @@ export default function EventDetail({ eventDetail, transformedSeatRow, seatsInRo
       </div>
 
       {/* event info */}
-      <aside className="w-full max-w-sm bg-white rounded-md shadow-sm p-3 flex flex-col gap-2">
+      <aside className="w-full md:max-w-sm bg-white rounded-md shadow-sm p-3 flex flex-col gap-2">
         <img
           src={eventDetail.headerImageUrl}
           alt="Event header"
-          className="rounded-md h-32 object-cover"
+          className="rounded-md object-cover"
         />
         {/* event name */}
         <h1 className="text-xl text-zinc-900 font-semibold">{eventDetail.namePub}</h1>
