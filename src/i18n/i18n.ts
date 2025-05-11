@@ -14,6 +14,7 @@ i18n
     resources: {
       en: {
         translation: {
+          locale: 'en-US',
           checkoutNow: 'Checkout now',
           checkout: 'Checkout',
           noTickets: 'No tickets selected',
@@ -45,6 +46,7 @@ i18n
       },
       cs: {
         translation: {
+          locale: 'cs-CZ',
           checkoutNow: 'Pokračovat k pokladně',
           checkout: 'Pokladna',
           noTickets: 'Žádné lístky nejsou vybrány',

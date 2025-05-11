@@ -1,10 +1,11 @@
 import type { EventDetailType, SeatRow, TicketType, TransformedSeatRow } from '@/types/event.ts'
 import { Seat } from '@/components/Seat.tsx'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery } from '@tanstack/react-query'
 import { AddToCalendarButton } from 'add-to-calendar-button-react'
 import { t } from 'i18next'
+import { Calendar, MapPin } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { Skeleton } from './ui/skeleton'
 
 interface EventDetailProps {
   eventDetail: EventDetailType
@@ -102,6 +103,19 @@ export default function EventDetail({ eventDetail }: EventDetailProps) {
         />
         {/* event name */}
         <h1 className="text-xl text-zinc-900 font-semibold">{eventDetail.namePub}</h1>
+
+        <span className="text-sm text-zinc-500 flex flex-row gap-1">
+          <Calendar />
+          {(new Date(eventDetail.dateFrom)).toLocaleString(t('locale'))}
+          {' - '}
+          {(new Date(eventDetail.dateTo)).toLocaleString(t('locale'))}
+        </span>
+        <span className="text-sm text-zinc-500 flex flex-row gap-1">
+          <MapPin />
+          {' '}
+          {eventDetail.place}
+        </span>
+
         {/* event description */}
         <p className="text-sm text-zinc-500">{eventDetail.description}</p>
         {/* add to calendar button */}
@@ -112,6 +126,7 @@ export default function EventDetail({ eventDetail }: EventDetailProps) {
             options="'Apple','Google'"
             startDate={eventDetail.dateFrom}
             endDate={eventDetail.dateTo}
+            location={eventDetail.place}
             timeZone="Europe/Prague"
           />
         </div>
