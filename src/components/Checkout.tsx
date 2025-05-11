@@ -106,6 +106,8 @@ export default function Checkout() {
           <DialogTitle className="text-zinc-900 flex justify-center mb-4">{t('checkout')}</DialogTitle>
           {checkout.state.count > 0 ? <SeatList /> : <span className="text-zinc-500">{t('noTickets')}</span>}
 
+          <Button onClick={() => checkout.dispatch({ type: CheckoutActionType.CLEAR })}>Remove all</Button>
+
           <div className="flex justify-between items-center text-zinc-900 pt-8">
             <span>
               {t('totalTickets')}

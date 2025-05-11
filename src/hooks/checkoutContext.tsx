@@ -12,12 +12,14 @@ enum CheckoutActionType {
   ADD = 'add',
   REMOVE = 'remove',
   SET_EVENT_ID = 'set_event_id',
+  CLEAR = 'clear',
 }
 
 type CheckoutAction =
   | { type: CheckoutActionType.ADD, seat: TransformedSeat }
   | { type: CheckoutActionType.REMOVE, seat: TransformedSeat }
   | { type: CheckoutActionType.SET_EVENT_ID, eventId: string }
+  | { type: CheckoutActionType.CLEAR }
 
 interface CheckoutContextType {
   state: CheckoutState
@@ -48,6 +50,14 @@ function checkoutReducer(state: CheckoutState, action: CheckoutAction) {
       return {
         ...state,
         eventId: action.eventId ? action.eventId : state.eventId,
+      }
+    }
+    case CheckoutActionType.CLEAR: {
+      return {
+        eventId: state.eventId,
+        count: 0,
+        totalPrice: 0,
+        selectedSeats: [],
       }
     }
     default: {
