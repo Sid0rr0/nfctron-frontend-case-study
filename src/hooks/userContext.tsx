@@ -1,10 +1,5 @@
+import type { User } from '@/types/auth'
 import { createContext, useContext, useState } from 'react'
-
-interface User {
-  firstName: string
-  lastName: string
-  email: string
-}
 
 interface AuthState {
   isLoggedIn: boolean

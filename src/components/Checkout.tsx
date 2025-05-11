@@ -1,6 +1,9 @@
+import type { OrderResponse } from '@/types/order'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -12,6 +15,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import CheckoutForm from './CheckoutForm'
 import LoginForm from './LoginForm'
+import OrderSummary from './OrderSummary'
 import { Button } from './ui/button'
 
 export default function Checkout() {
@@ -22,6 +26,8 @@ export default function Checkout() {
     submited: false,
     message: '',
   })
+
+  const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null)
 
   async function handleSubmit(data: {
     email: string
@@ -45,12 +51,14 @@ export default function Checkout() {
           user: { ...data },
         }),
       })
-      const responseData = await response.json()
       if (response.ok) {
+        const responseData = await response.json()
+        setOrderResponse(responseData)
         setStatus({ submited: true, message: t('checkoutSuccess') })
+        checkout.dispatch({ type: CheckoutActionType.CLEAR })
       }
       else {
-        console.error('Checkout error:', responseData)
+        console.error('Checkout error')
         setStatus({ submited: false, message: t('checkoutError') })
       }
     }
@@ -104,52 +112,84 @@ export default function Checkout() {
       <DialogContent className="overflow-auto max-h-[80vh]">
         <DialogHeader>
           <DialogTitle className="text-zinc-900 flex justify-center mb-4">{t('checkout')}</DialogTitle>
-          {checkout.state.count > 0 ? <SeatList /> : <span className="text-zinc-500">{t('noTickets')}</span>}
+        </DialogHeader>
 
-          <Button onClick={() => checkout.dispatch({ type: CheckoutActionType.CLEAR })}>Remove all</Button>
+        {!status.submited && (
+          <>
+            {/* tickets */}
+            <div>
+              {checkout.state.count > 0
+                ? (
+                    <div className="flex flex-col gap-2 items-end">
+                      <SeatList />
+                      <Button onClick={() => checkout.dispatch({ type: CheckoutActionType.CLEAR })}>{t('removeAll')}</Button>
+                    </div>
+                  )
+                : <span className="text-zinc-500">{t('noTickets')}</span>}
 
-          <div className="flex justify-between items-center text-zinc-900 pt-8">
-            <span>
-              {t('totalTickets')}
-              {' '}
-              {checkout.state.count}
-            </span>
-            <span className="text-2xl font-semibold">
-              {checkout.state.totalPrice}
-              {' '}
-              CZK
-            </span>
-          </div>
+              <div className="flex justify-between items-center text-zinc-900 pt-8">
+                <span>
+                  {t('totalTickets')}
+                  {' '}
+                  {checkout.state.count}
+                </span>
+                <span className="text-2xl font-semibold">
+                  {checkout.state.totalPrice}
+                  {' '}
+                  CZK
+                </span>
+              </div>
+            </div>
 
-          <div className="pt-8 text-zinc-900">
-            {!auth.authState.isLoggedIn && (
-              <>
-                <h2 className="text-xl flex justify-center">Log In or fill out the info</h2>
-                <h3 className="text-lg">Log in</h3>
-              </>
-            )}
-            {!auth.authState.isLoggedIn && <LoginForm />}
-
-            {!status.submited
-              && (
+            {/* user data */}
+            <div className="pt-8 text-zinc-900">
+              {!auth.authState.isLoggedIn && (
                 <>
-                  <h3 className="text-lg mt-8">{t('fillOutTheInfo')}</h3>
-                  <CheckoutForm
-                    data={{
-                      email: auth.authState.user?.email,
-                      firstName: auth.authState.user?.firstName,
-                      lastName: auth.authState.user?.lastName,
-                    }}
-                    onSubmit={handleSubmit}
-                  />
+                  <h2 className="text-xl flex justify-center">Log In or fill out the info</h2>
+                  <h3 className="text-lg">Log in</h3>
                 </>
               )}
+              {!auth.authState.isLoggedIn && <LoginForm />}
 
-            <div>
-              {status.message}
+              <>
+                <h3 className="text-lg mt-8">{t('fillOutTheInfo')}</h3>
+                <CheckoutForm
+                  data={{
+                    email: auth.authState.user?.email,
+                    firstName: auth.authState.user?.firstName,
+                    lastName: auth.authState.user?.lastName,
+                  }}
+                  onSubmit={handleSubmit}
+                />
+              </>
             </div>
-          </div>
-        </DialogHeader>
+          </>
+        )}
+        {/* order status */}
+        <div className="text-zinc-900">
+          {status.message}
+          { orderResponse && (
+            <>
+              <OrderSummary data={orderResponse} />
+
+              <DialogFooter className="sm:justify-start">
+                <DialogClose asChild>
+                  <Button
+                    className="ml-auto mt-4"
+                    onClick={() => {
+                      setOrderResponse(null)
+                      setStatus({ submited: false, message: '' })
+                    }}
+                  >
+                    {t('newOrder')}
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+
+            </>
+          )}
+        </div>
+
       </DialogContent>
     </Dialog>
   )

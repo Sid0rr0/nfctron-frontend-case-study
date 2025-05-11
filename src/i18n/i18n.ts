@@ -42,6 +42,8 @@ i18n
           },
           checkoutSuccess: 'Checkout successful!',
           checkoutError: 'Checkout failed. Please try again.',
+          removeAll: 'Remove all',
+          newOrder: 'New order',
         },
       },
       cs: {
@@ -74,6 +76,8 @@ i18n
           },
           checkoutSuccess: 'Úspěšně zakoupeno!',
           checkoutError: 'Nákup se nezdařil. Zkuste to prosím znovu.',
+          removeAll: 'Odebrat vše',
+          newOrder: 'Nová objednávka',
         },
       },
     },
