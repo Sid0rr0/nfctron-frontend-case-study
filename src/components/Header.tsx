@@ -42,7 +42,7 @@ function Header() {
         </div>
         {/* app/author title/name placeholder */}
         {/* <div className="bg-zinc-100 rounded-md h-8 w-[200px]" /> */}
-        <div className="bg-blue-400 rounded-md px-4 py-2">BLEtron</div>
+        <div className="bg-blue-400 rounded-md px-4 py-2">RFIDtron</div>
         <div className="flex flex-row">
           <div className="text-zinc-900 font-medium flex gap-2">
             <DropdownMenu>
