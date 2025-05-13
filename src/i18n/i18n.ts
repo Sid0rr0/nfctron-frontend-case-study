@@ -39,6 +39,8 @@ i18n
           error: {
             emailLength: 'Email must be at least 3 characters long',
             login: 'An error occurred during login. Please try again.',
+            fetching: 'Error fetching data',
+            tryAgain: 'Please try again.',
           },
           checkoutSuccess: 'Checkout successful!',
           checkoutError: 'Checkout failed. Please try again.',
@@ -73,6 +75,8 @@ i18n
           error: {
             emailLength: 'E-mail musí mít alespoň 3 znaky',
             login: 'Došlo k chybě při přihlašování. Zkuste to prosím znovu.',
+            tryAgain: 'Zkuste to prosím znovu.',
+            fetching: 'Chyba při načítání dat',
           },
           checkoutSuccess: 'Úspěšně zakoupeno!',
           checkoutError: 'Nákup se nezdařil. Zkuste to prosím znovu.',

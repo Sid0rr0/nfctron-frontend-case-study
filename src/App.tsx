@@ -1,12 +1,14 @@
 import type { EventDetailType } from './types/event'
+import Checkout from '@/components/Checkout'
 import EventDetail from '@/components/EventDetail'
 import Header from '@/components/Header'
+import ErrorDisplay from '@/components/QueryError'
+import Skeleton from '@/components/Skeleton'
 import { CheckoutActionType, useCheckout } from '@/hooks/checkoutContext'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+
 import { useTranslation } from 'react-i18next'
-import Checkout from './components/Checkout'
-import { Skeleton } from './components/ui/skeleton'
 import './App.css'
 
 function App() {
@@ -34,21 +36,13 @@ function App() {
       <Header />
 
       <main className="grow flex flex-col items-center justify-center">
-        {
-          eventDetail.isSuccess
-            ? (
-                eventDetail.data
-                  ? <EventDetail eventDetail={eventDetail.data} />
-                  : <div className="text-center">Error</div>
-              )
-            : (
-                <div className="flex flex-col items-start justify-center gap-2">
-                  <Skeleton className="h-1/2 min-h-32 w-1/2 min-w-64 rounded-xl" />
-                  <Skeleton className="h-4 w-1/2 min-w-64" />
-                  <Skeleton className="h-4 w-16" />
-                </div>
-              )
-        }
+        {eventDetail.isLoading && <Skeleton />}
+
+        {eventDetail.isError && <ErrorDisplay error={eventDetail.error} onRetry={() => eventDetail.refetch()} />}
+
+        {eventDetail.isSuccess && eventDetail.data && (
+          <EventDetail eventDetail={eventDetail.data} />
+        )}
 
       </main>
 
